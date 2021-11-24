@@ -12,6 +12,8 @@ task("read-keepers-counter", "Gets the value of the counter from the Counter con
         const accounts = await ethers.getSigners()
         const signer = accounts[0]
         const keepersCounterContract = await new ethers.Contract(contractAddr, KeepersCounterContract.interface, signer)
+        let lastTimeStamp = BigInt(await keepersCounterContract.lastTimeStamp()).toString()
+        console.log('Last timestamp is: ', lastTimeStamp)
         await keepersCounterContract.counter().then((data) => {
             console.log('Counter is: ', BigInt(data).toString())
         })

@@ -17,6 +17,7 @@ require("./tasks/random-number-consumer")
 require("./tasks/price-consumer")
 require("./tasks/api-consumer")
 require("./tasks/keepers")
+require("./tasks/keeper-tester")
 require("@appliedblockchain/chainlink-plugins-fund-link")
 
 require('dotenv').config()
