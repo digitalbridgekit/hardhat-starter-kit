@@ -5,7 +5,7 @@
 The follow contract implements KeeperCompatibleInterface interface this interface able the contract to be called by a keeper.
 
 ```
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.7;
 
 
 interface KeeperCompatibleInterface {
@@ -53,7 +53,7 @@ contract Counter is KeeperCompatibleInterface {
 As the Counter contract is defined to be called by an external contract, it's necessary to deploy an auxiliary contract to call the Counter contract, simulating a Keeper call.
 
 ```
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.7;
 
 
 interface KeeperCompatibleInterface {
@@ -98,7 +98,7 @@ Started HTTP and WebSocket JSON-RPC server at http://127.0.0.1:8545/
 ### The second step is deploy the contracts
 
  * In a different terminal execute: npx hardhat deploy --network localhost --tags keeper
-output:
+
 ```
 user@host:~/keeper/hardhat-starter-kit$ npx hardhat deploy --network localhost --tags keepers
 deploying "Counter" (tx: 0xd4d0a5677a74f16d1f81f183ae1d1707bdadaf07f30eeb6b6dbaac36fd5aab17)...: deployed at 0x9E545E3C0baAB3E08CdfD552C960A1050f373042 with 318617 gas
@@ -138,7 +138,7 @@ Contract  0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9  external data request succ
 The status of this upkeep is currently:  true
 
 ```
-As the checkUpkeep responds true the performUpkeep function is executed in the same way that happends with the keeper.
+As the checkUpkeep function responds true the performUpkeep function is executed in the same way that happends with the keeper.
 
 Now you can read the status again to verify that the counter value was incremented in 1 more and the lasttimestamp changed to the current value too.
 
