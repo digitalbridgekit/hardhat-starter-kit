@@ -1,8 +1,33 @@
 # Example code to understand Chainlink Keepers
 
+## Chainlink Hardhat Box
+ 
+### Requirements
+
+- [NPM](https://www.npmjs.com/) or [YARN](https://yarnpkg.com/)
+
+### Installation
+
+```bash
+git clone https://github.com/digitalbridgekit/hardhat-starter-kit.git
+cd hardhat-starter-kit
+```
+then
+
+```bash
+npm install
+```
+
+Or
+
+```bash
+yarn
+```
+## Example context
 ## The Counter contract 
 
 The follow contract implements KeeperCompatibleInterface interface this interface able the contract to be called by a keeper.
+
 
 ```
 pragma solidity ^0.8.7;
