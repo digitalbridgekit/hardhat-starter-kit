@@ -1,12 +1,11 @@
 # Example code to understand Chainlink Keepers
 
-## Chainlink Hardhat Box
- 
-### Requirements
+## Requirements
 
 - [NPM](https://www.npmjs.com/) or [YARN](https://yarnpkg.com/)
+- Chainlink Hardhat Box
 
-### Installation
+## Installation
 
 ```bash
 git clone https://github.com/digitalbridgekit/hardhat-starter-kit.git
@@ -23,6 +22,7 @@ Or
 ```bash
 yarn
 ```
+
 ## Example context
 ## The Counter contract 
 
