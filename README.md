@@ -1,5 +1,9 @@
 # Example code to understand Chainlink Keepers
 
+ * To understand what are Chainlink Keepers please read the following docs
+   *  [Introduction to Chainlink Keepers](https://docs.chain.link/docs/chainlink-keepers/introduction/)
+   *  [Keepers Network Overview](https://docs.chain.link/docs/chainlink-keepers/overview/)
+  
 ## Requirements
 
 - [NPM](https://www.npmjs.com/) or [YARN](https://yarnpkg.com/)
