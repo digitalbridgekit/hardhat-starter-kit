@@ -14,7 +14,7 @@
 ## Installation
 
 ```bash
-git clone https://github.com/digitalbridgekit/hardhat-starter-kit.git
+git clone -b keeper-simulation-w-web3script https://github.com/digitalbridgekit/hardhat-starter-kit.git
 cd hardhat-starter-kit
 ```
 then
