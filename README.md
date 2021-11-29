@@ -1,6 +1,6 @@
-# Example code to understand Chainlink Keepers
+# Example code to understand Chainlink Keepers, based on a web3 script
 
-**The main idea of this example is to create an auxiliary contract called "KeeperSimulation" to manually try and adjust the Keeper prior to registration in the keeper network.**
+**The main idea of this example is to create an auxiliary task called "keeper-simulation" to manually try and adjust the Keeper prior to registration in the keeper network.**
 
  * To understand what are Chainlink Keepers please read the following docs
    *  [Introduction to Chainlink Keepers](https://docs.chain.link/docs/chainlink-keepers/introduction/)
@@ -79,44 +79,13 @@ contract Counter is KeeperCompatibleInterface {
     }
 }
 ```
-## The KeeperSimulation contract 
+## The keeper-simulation task
 
-As the Counter contract is defined to be called by an external contract, it's necessary to deploy an auxiliary contract to call the Counter contract, simulating a Keeper call.
+As the Counter contract is defined to be called in external mode, it's necessary a web3 script to call the Counter contract, simulating a Keeper call.
 
-```
-pragma solidity ^0.8.7;
+[keeper-simulation.js](https://github.com/digitalbridgekit/hardhat-starter-kit/blob/main/tasks/keeper-simulation/keeper-simulation.js)
 
 
-interface KeeperCompatibleInterface {
-    function checkUpkeep(bytes calldata checkData) external returns (bool upkeepNeeded, bytes memory performData);
-    function performUpkeep(bytes calldata performData) external;
-}
-
-contract KeeperSimulation {
-    
-    KeeperCompatibleInterface public counterInstance;
-    bool private upkeepNeeded;
-    bytes public performData;
-    bytes public value = '0x00';
-    
-    constructor(address _counterContractAddress) public {
-        counterInstance = KeeperCompatibleInterface(_counterContractAddress);
-      
-    }
-
-    function checkUpkeep() public {
-        (upkeepNeeded, performData) = counterInstance.checkUpkeep(value);
-        if (upkeepNeeded) {
-            counterInstance.performUpkeep(value);
-        }
-    }
-
-    function getUpkeepNeeded() public returns (bool) {
-        return upkeepNeeded;
-    }
-
-}
-```
 ## Steps to deploy and test the contract and understand how the Keepers works
 
 ### The first step is run hardhat as local node
@@ -135,13 +104,12 @@ user@host:~/keeper/hardhat-starter-kit$ npx hardhat deploy --network localhost -
 ```
 output
 ```bash
-deploying "Counter" (tx: 0xd4d0a5677a74f16d1f81f183ae1d1707bdadaf07f30eeb6b6dbaac36fd5aab17)...: deployed at 0x9E545E3C0baAB3E08CdfD552C960A1050f373042 with 318617 gas
-Head to https://keepers.chain.link/ to register your contract for upkeeps. Then run the following command to track the counter updates
-npx hardhat read-keepers-counter --contract 0x9E545E3C0baAB3E08CdfD552C960A1050f373042 --network localhost
-----------------------------------------------------
-deploying "KeeperSimulation" (tx: 0xcc12b04d1df754640b4d80ded5b0006074f8d8eb4d4629b2db0306dd78afd289)...: deployed at 0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9 with 598338 gas
-Run Keeper simulation contract with following command:
-npx hardhat keeper-test --contract 0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9 --network localhost
+Compilation finished successfully
+deploying "Counter" (tx: 0xe74fb4e378f4055540692272da229b22bbbafc07a8589f13118bfdd07d30e51e)...: deployed at 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 with 342119 gas
+Run the following command to track the counter updates:
+npx hardhat read-keepers-counter --contract 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 --network localhost
+Run the following command to manually simulate a Keeper call:
+npx hardhat keeper-simulation --contract 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 --network localhost
 ----------------------------------------------------
 ```
 
@@ -154,13 +122,12 @@ The Counter contract has:
 
 To read the current state excecute the follow 
 ```bash
-user@host:~/keeper/hardhat-starter-kit$ npx hardhat read-keepers-counter --contract 0x9E545E3C0baAB3E08CdfD552C960A1050f373042 --network localhost
+user@host:~/keeper/hardhat-starter-kit$ npx hardhat read-keepers-counter --contract 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 --network localhost
 ```
 output
 ```bash
-Reading counter from Keepers contract  0x9E545E3C0baAB3E08CdfD552C960A1050f373042  on network  localhost
-
-Last timestamp is:  1637791019
+Reading counter from Keepers contract  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  on network  localhost
+Last timestamp is:  1638220869
 Counter is:  0
 ```
 
@@ -168,28 +135,25 @@ The counter in 0 value implie that the keeper never executed the preformUpkeep f
 
 * Now after more than 30 seconds execute the follow 
 ```bash
-user@host:~/keeper/hardhat-starter-kit$ npx hardhat keeper-test --contract 0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9 --network localhost
+user@host:~/keeper/hardhat-starter-kit$ npx hardhat keeper-simulation --contract 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 --network localhost
 ```
 output
 ```bash
-Calling Keeper simulator contract  0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9  on network  localhost
-Contract  0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9  external data request successfully called. Transaction Hash:  0x47b244eb920c50dd3e06a79bb4555211f4c5bb0ab920dd361943b58db97f98e4
-
-The status of this upkeep is currently:  true
-
+Calling Counter contract simulating a Keeper call  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  on network  localhost
+Contract  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  checkUpkeep:  true
+Contract  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  performUpkeep was called. Transaction Hash:  0x6011322d77c46b3181098e305b9ef7cefdb7345b09097d73e791859265613e40
 ```
 As the interval is greater than 30 seconds the checkUpkeep function responds **true** so the performUpkeep function is executed in the same way as for the keeper.
 
 Now you can read the status again.
 
 ```bash
-user@host:~/keeper/hardhat-starter-kit$ npx hardhat read-keepers-counter --contract 0x9E545E3C0baAB3E08CdfD552C960A1050f373042 --network localhost
+user@host:~/keeper/hardhat-starter-kit$ npx hardhat read-keepers-counter --contract 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 --network localhost
 ```
 output
 ```bash
-Reading counter from Keepers contract  0x9E545E3C0baAB3E08CdfD552C960A1050f373042  on network  localhost
-
-Last timestamp is:  1637791054
+Reading counter from Keepers contract  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  on network  localhost
+Last timestamp is:  1638220921
 Counter is:  1
 ```
 You can verify that the counter value was incremented in 1 more and the lasttimestamp changed to the current value too.
@@ -197,14 +161,14 @@ You can verify that the counter value was incremented in 1 more and the lasttime
 Now you need to wait more than 30 seconds again and execute the contract that simulates the keeper again
 
 ```bash
-user@host:~/keeper/hardhat-starter-kit$ npx hardhat keeper-test --contract 0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9 --network localhost
+user@host:~/keeper/hardhat-starter-kit$ npx hardhat keeper-simulation --contract 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 --network localhost
 ```
 output
 ```bash
-Calling Keeper simulator contract  0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9  on network  localhost
-Contract  0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9  external data request successfully called. Transaction Hash:  0x1e359e39938217e1c344c436cb40b76bff350b348ffcf43581f63110172be7f5
+Calling Counter contract simulating a Keeper call  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  on network  localhost
+Contract  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  checkUpkeep:  true
+Contract  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  performUpkeep was called. Transaction Hash:  0x740019915422734e6926879560791818ad8ac61ea5dd020fbb866289f7084a37
 
-The status of this upkeep is currently:  true
 ```
 
 The result **true** indicates that the performUpkeep was executed again.
@@ -212,13 +176,12 @@ The result **true** indicates that the performUpkeep was executed again.
 Reading the current Counter values.
 
 ```bash
-user@host:~/keeper/hardhat-starter-kit$ npx hardhat read-keepers-counter --contract 0x9E545E3C0baAB3E08CdfD552C960A1050f373042 --network localhost
+user@host:~/keeper/hardhat-starter-kit$ npx hardhat read-keepers-counter --contract 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 --network localhost
 ```
 output
 ```bash
-Reading counter from Keepers contract  0x9E545E3C0baAB3E08CdfD552C960A1050f373042  on network  localhost
-
-Last timestamp is:  1637791086
+Reading counter from Keepers contract  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  on network  localhost
+Last timestamp is:  1638220985
 Counter is:  2
 ```
 The counter increment 1 more its value and the timestamp changed to the new value.
@@ -226,24 +189,22 @@ The counter increment 1 more its value and the timestamp changed to the new valu
 But if you execute the contract that simulates the keeper again before 30 seconds from the last execution.
 
 ```bash
-user@host:~/keeper/hardhat-starter-kit$ npx hardhat keeper-test --contract 0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9 --network localhost
+user@host:~/keeper/hardhat-starter-kit$ npx hardhat keeper-simulation --contract 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 --network localhost
 ```
 output
 ```bash
-Calling Keeper simulator contract  0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9  on network  localhost
-Contract  0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9  external data request successfully called. Transaction Hash:  0xac5309e6e0d8e83b71345bbb4930099fbd9683f65127855faa2109a04818b8a0
-The status of this upkeep is currently:  false
+Calling Counter contract simulating a Keeper call  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  on network  localhost
+Contract  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  checkUpkeep:  false
 ```
 The results of checkUpkeep function is **false** 
 So if you read the Counter values.
 ```bash
-user@host:~/keeper/hardhat-starter-kit$ npx hardhat read-keepers-counter --contract 0x9E545E3C0baAB3E08CdfD552C960A1050f373042 --network localhost
+user@host:~/keeper/hardhat-starter-kit$ npx hardhat read-keepers-counter --contract 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318 --network localhost
 ```
 output
 ```bash
-Reading counter from Keepers contract  0x9E545E3C0baAB3E08CdfD552C960A1050f373042  on network  localhost
-
-Last timestamp is:  1637791086
+Reading counter from Keepers contract  0x8A791620dd6260079BF849Dc5567aDC3F2FdC318  on network  localhost
+Last timestamp is:  1638220985
 Counter is:  2
 ```
 The state didn't change.

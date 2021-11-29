@@ -17,8 +17,10 @@ module.exports = async ({
         args: [keepersUpdateInterval],
         log: true
     })
-    log("Head to https://keepers.chain.link/ to register your contract for upkeeps. Then run the following command to track the counter updates")
+    log("Run the following command to track the counter updates:")
     log("npx hardhat read-keepers-counter --contract " + keepersCounter.address + " --network " + networkConfig[chainId]['name'])
+    log("Run the following command to manually simulate a Keeper call:")
+    log("npx hardhat keeper-simulation --contract " + keepersCounter.address + " --network " + networkConfig[chainId]['name'])
     log("----------------------------------------------------")
 
 }

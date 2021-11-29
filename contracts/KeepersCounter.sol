@@ -21,9 +21,12 @@ contract Counter is KeeperCompatibleInterface {
       counter = 0;
     }
 
-    function checkUpkeep(bytes calldata /* checkData */) external override returns (bool upkeepNeeded, bytes memory /* performData */) {
-        upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
-        // We don't use the checkData in this example. The checkData is defined when the Upkeep was registered.
+    // The benefits of this function is that it deasn't have gas cost 
+    // and can use off-chain values to determine the trigger condition
+    function checkUpkeep(bytes calldata  checkData ) external override view returns (bool upkeepNeeded, bytes memory /* performData */) {
+        uint auxTimestamp = abi.decode(checkData, (uint));
+        
+        upkeepNeeded = (auxTimestamp - lastTimeStamp) > interval;
     }
 
     function performUpkeep(bytes calldata /* performData */) external override {
