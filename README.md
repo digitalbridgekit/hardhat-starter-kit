@@ -128,7 +128,7 @@ Started HTTP and WebSocket JSON-RPC server at http://127.0.0.1:8545/
 
 ### The second step is deploy the contracts
 
- * In a different terminal execute: npx hardhat deploy --network localhost --tags keepers
+ * In a different terminal execute the following
 
 ```bash
 user@host:~/keeper/hardhat-starter-kit$ npx hardhat deploy --network localhost --tags keepers
