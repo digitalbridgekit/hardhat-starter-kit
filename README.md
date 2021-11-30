@@ -1,4 +1,4 @@
-# Example code to understand Chainlink Keepers, based on a web3 script
+# Example to understand Chainlink Keepers, based on a web3 script
 
 **The main idea of this example is to create an auxiliary task called "keeper-simulation" to manually try and adjust the Keeper prior to registration in the keeper network.**
 
@@ -27,6 +27,10 @@ Or
 
 ```bash
 yarn
+```
+then execute the following
+```bash
+cp .env.example .env
 ```
 
 ## Example context
