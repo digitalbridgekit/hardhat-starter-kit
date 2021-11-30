@@ -87,7 +87,7 @@ contract Counter is KeeperCompatibleInterface {
 
 As the Counter contract is defined to be called in external mode, it's necessary a web3 script to call the Counter contract, simulating a Keeper call.
 
-[keeper-simulation.js](https://github.com/digitalbridgekit/hardhat-starter-kit/blob/main/tasks/keeper-simulation/keeper-simulation.js)
+[keeper-simulation.js](https://github.com/digitalbridgekit/hardhat-starter-kit/blob/keeper-simulation-w-web3script/tasks/keeper-simulation/keeper-simulation.js)
 
 
 ## Steps to deploy and test the contract and understand how the Keepers works
